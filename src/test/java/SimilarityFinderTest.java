@@ -53,4 +53,15 @@ public class SimilarityFinderTest {
         Assert.assertThat(result, is(testValue));
     }
 
+    @Test public void testCalculateJackardSimilarityWithDifferentLengthSequences() {
+        int[] seq1 = {1, 2, 3};
+        int[] seq2 = {1, 2, 3, 6, 7, 8};
+        SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcherDoubler());
+
+        double testValue = (double)seq1.length/(double)seq2.length;
+        double result = similarityFinder.calculateJackardSimilarity(seq1, seq2);
+
+        Assert.assertThat(result, is(testValue));
+    }
+
 }
