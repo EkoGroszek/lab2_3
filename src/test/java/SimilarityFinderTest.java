@@ -29,4 +29,18 @@ public class SimilarityFinderTest {
         Assert.assertThat(result, is(testValue));
     }
 
+
+    @Test public void testCalculateJackardSimilarityWithDifferentSequences() {
+        int[] seq1 = {32, 213, 313};
+        int[] seq2 = {1, 3 , 35};
+        SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcherDoubler());
+
+        double testValue = 0.0d;
+        double result = similarityFinder.calculateJackardSimilarity(seq1, seq2);
+
+        Assert.assertThat(result, is(testValue));
+    }
+
+
+
 }
