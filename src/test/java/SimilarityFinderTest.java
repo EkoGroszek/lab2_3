@@ -1,3 +1,4 @@
+import edu.iis.mto.search.SearchResult;
 import edu.iis.mto.similarity.SequenceSearcherDoubler;
 import edu.iis.mto.similarity.SimilarityFinder;
 import org.junit.Assert;
@@ -21,7 +22,11 @@ public class SimilarityFinderTest {
     @Test public void testCalculateJackardSimilarityWithBothSameSequences() {
         int[] seq1 = {32, 213, 313};
         int[] seq2 = {32, 213, 313};
-        SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcherDoubler());
+        SimilarityFinder similarityFinder = new SimilarityFinder((key, seq) -> {
+            if (key == seq[0] || key == seq[1] || key == seq[2])
+                return SearchResult.builder().withFound(true).build();
+            return SearchResult.builder().withFound(false).build();
+        });
 
         double testValue = 1.0d;
         double result = similarityFinder.calculateJackardSimilarity(seq1, seq2);
@@ -56,10 +61,12 @@ public class SimilarityFinderTest {
     @Test public void testCalculateJackardSimilarityWithDifferentLengthSequences() {
         int[] seq1 = {1, 2, 3};
         int[] seq2 = {1, 2, 3, 6, 7, 8};
-        SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcherDoubler());
+        SequenceSearcherDoubler sequenceSearcherDoubler = new SequenceSearcherDoubler();
+        SimilarityFinder similarityFinder = new SimilarityFinder(sequenceSearcherDoubler);
 
-        double testValue = (double)seq1.length/(double)seq2.length;
-        double result = similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        double testValue = (double) seq1.length;
+        similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        double result = sequenceSearcherDoubler.getCallCounter();
 
         Assert.assertThat(result, is(testValue));
     }
